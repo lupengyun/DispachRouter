@@ -23,6 +23,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -77,6 +78,10 @@ public class DispatcherProcessor extends AbstractProcessor {
 
 
         for (Element element : elements) {
+            if (element.getKind() != ElementKind.CLASS) {
+                throw new IllegalStateException("Dispatcher annotation only be used for class");
+            }
+
             ClassName dispatchName = ClassName.get((TypeElement) element);
             builder.addStatement("dispatchers.add($T.class)", dispatchName);
         }
